@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { UserButton, UserProfile, SignOutButton } from "@clerk/nextjs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import {
   Calendar,
@@ -27,7 +28,6 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import { GoogleCalendarIntegration } from "@/components/google-calendar-integration"
-
 interface ClientAppointment {
   id: string
   customerName: string
@@ -299,10 +299,8 @@ export default function ClientDashboard() {
               <Bot className="h-3 w-3 mr-1" />
               Client Dashboard
             </Badge>
-            <Button variant="outline" size="sm">
-              <Users className="h-4 w-4 mr-2" />
-              Business Profile
-            </Button>
+            {/* Clerk user button provides quick access to profile and sign-out */}
+            <UserButton />
           </div>
         </div>
       </motion.header>

@@ -1,4 +1,5 @@
-import type React from "react";
+"use client";
+
 import { Protect } from "@clerk/nextjs";
 
 export default function Layout({ children }: { children: React.ReactNode }) {

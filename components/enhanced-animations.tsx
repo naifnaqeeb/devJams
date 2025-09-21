@@ -13,7 +13,7 @@ export const ButtonHover = ({ children, className = "", ...props }: any) => {
         boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
       }}
       whileTap={{ scale: 0.98 }}
-      transition={{ duration: 0.2, ease: "easeOut" }}
+    transition={{ duration: 0.2, ease: "easeOut" as any }}
       className={className}
       {...props}
     >
@@ -40,7 +40,7 @@ export const StaggerContainer = ({ children, className = "", delay = 0.1 }: any)
       transition: {
         staggerChildren: delay,
         delayChildren: 0.2,
-      },
+      } as any,
     },
   }
 
@@ -51,8 +51,8 @@ export const StaggerContainer = ({ children, className = "", delay = 0.1 }: any)
       opacity: 1,
       transition: {
         duration: 0.6,
-        ease: "easeOut",
-      },
+        ease: "easeOut" as any,
+      } as any,
     },
   }
 

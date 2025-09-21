@@ -20,9 +20,9 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider
-    afterSignOutUrl="/verified"
-    signInUrl="/login"
-    signUpUrl="/signup"
+      afterSignOutUrl="/"
+      signInUrl="/login"
+      signUpUrl="/signup"
     >
     <html lang="en">
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
