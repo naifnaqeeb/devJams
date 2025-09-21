@@ -4,7 +4,7 @@ export default function SignInPage() {
   return (
     <div className="flex flex-col h-screen">
         <div className="m-auto">
-            <SignIn redirectUrl="/user/dashboard"/>
+            <SignIn redirectUrl="/dashboard/user"/>
         </div>
     </div>
   )
