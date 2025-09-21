@@ -1,10 +1,10 @@
 import { SignIn } from "@clerk/nextjs"
 
-export default function page() {
+export default function SignInPage() {
   return (
-    <div className="flex flex-col h-100">
+    <div className="flex flex-col h-screen">
         <div className="m-auto">
-            <SignIn forceRedirectUrl={"/user/dashboard"}/>
+            <SignIn redirectUrl="/user/dashboard"/>
         </div>
     </div>
   )

@@ -19,7 +19,11 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <ClerkProvider>
+    <ClerkProvider
+    afterSignOutUrl="/verified"
+    signInUrl="/login"
+    signUpUrl="/signup"
+    >
     <html lang="en">
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
         <Suspense fallback={null}>{children}</Suspense>

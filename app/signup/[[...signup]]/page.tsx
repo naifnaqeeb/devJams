@@ -1,10 +1,10 @@
 import { SignUp } from "@clerk/nextjs"
 
-export default function page() {
+export default function SignUpPage() {
   return (
-    <div className="flex flex-col h-100">
+    <div className="flex flex-col h-screen">
         <div className="m-auto">
-            <SignUp forceRedirectUrl={"user/dashboard"}/>
+            <SignUp redirectUrl="/user/dashboard"/>
         </div>
     </div>
   )
