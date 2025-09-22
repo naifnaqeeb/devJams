@@ -1,53 +1,44 @@
 "use client";
 
-import { useUser } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
+import { useUser, useClerk } from "@clerk/nextjs";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
 export default function DashboardPage() {
   const { user, isLoaded } = useUser();
+  const { signOut } = useClerk();
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const expectedType = searchParams.get("type");
 
   useEffect(() => {
-    if (!isLoaded) return;
+    if (!isLoaded) {
+      return;
+    }
 
-    // Debug: log user metadata to verify role is present and correct
-    console.debug("Dashboard redirect - user:", user);
-    console.debug("Dashboard redirect - publicMetadata:", user?.publicMetadata);
+    if (!user) {
+      router.replace("/login");
+      return;
+    }
 
-    // Wait up to 5s for publicMetadata.role to appear (handles delayed metadata propagation)
-    let mounted = true;
-    const timeoutMs = 5000;
-    const pollInterval = 200;
-    const start = Date.now();
+    const role = user.publicMetadata?.role || user.unsafeMetadata?.role;
 
-    const checkRoleAndRedirect = () => {
-      if (!mounted) return;
-      const role = user?.publicMetadata?.role;
-      if (role) {
-        if (role === "admin") {
-          router.replace("/dashboard/client");
-        } else {
-          router.replace("/dashboard/user");
-        }
+    if (expectedType) {
+      if (role !== expectedType) {
+
+        signOut(() => router.push(`/login?type=${expectedType}&error=role_mismatch`));
         return;
       }
+    }
 
-      if (Date.now() - start >= timeoutMs) {
-        // Fallback: assume regular user if role not present in time
-        router.replace("/dashboard/user");
-        return;
-      }
+    if (role === "admin") {
+      router.replace("/dashboard/client");
+    } else {
+      router.replace("/dashboard/user");
+    }
+    
+  }, [isLoaded, user, router, signOut, expectedType]);
 
-      setTimeout(checkRoleAndRedirect, pollInterval);
-    };
-
-    checkRoleAndRedirect();
-
-    return () => {
-      mounted = false;
-    };
-  }, [isLoaded, user, router]);
-
-  return <p>Redirecting...</p>;
+  return <p>Verifying and redirecting...</p>;
 }

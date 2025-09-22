@@ -10,6 +10,7 @@ import Link from "next/link"
 import { ScrollReveal } from "@/components/scroll-reveal"
 import { AnimatedCounter } from "@/components/animated-counter"
 import { FloatingElements } from "@/components/floating-elements"
+import { AuthModal } from "@/components/auth-modal"
 
 export default function LandingPage() {
   const [isHovered, setIsHovered] = useState(false)
@@ -17,11 +18,18 @@ export default function LandingPage() {
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"])
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0])
 
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [authAction, setAuthAction] = useState<"login" | "register" | null>(null)
+
+  const openModal = (action: "login" | "register") => {
+    setAuthAction(action)
+    setIsModalOpen(true)
+  }
+
   return (
     <div className="min-h-screen bg-background relative">
       <FloatingElements />
 
-      {/* Header */}
       <motion.header
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -40,13 +48,19 @@ export default function LandingPage() {
             <span className="text-xl font-bold">ScheduleAI</span>
           </motion.div>
 
-          <div className="flex items-center space-x-4">
-            <AuthButtons />
+          <div className="flex items-center space-x-2">
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button variant="ghost" onClick={() => openModal("login")}>
+                Login
+              </Button>
+            </motion.div>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button onClick={() => openModal("register")}>Register</Button>
+            </motion.div>
           </div>
         </div>
       </motion.header>
 
-      {/* Hero Section with Parallax */}
       <section className="container px-4 py-24 mx-auto relative">
         <motion.div style={{ y, opacity }} className="absolute inset-0 -z-10">
           <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 rounded-3xl" />
@@ -102,6 +116,7 @@ export default function LandingPage() {
                   className="text-lg px-8 py-6 relative overflow-hidden"
                   onMouseEnter={() => setIsHovered(true)}
                   onMouseLeave={() => setIsHovered(false)}
+                  onClick={() => openModal("register")}
                 >
                   <motion.div
                     className="absolute inset-0 bg-gradient-to-r from-primary to-accent"
@@ -129,7 +144,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Stats Section */}
       <ScrollReveal>
         <section className="container px-4 py-16 mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
@@ -157,7 +171,6 @@ export default function LandingPage() {
         </section>
       </ScrollReveal>
 
-      {/* Features Section */}
       <section className="container px-4 py-24 mx-auto">
         <ScrollReveal>
           <div className="text-center mb-16">
@@ -206,7 +219,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* How It Works Section */}
       <section className="bg-muted/30 py-24 relative overflow-hidden">
         <motion.div
           className="absolute inset-0 opacity-5"
@@ -270,7 +282,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* CTA Section */}
       <section className="container px-4 py-24 mx-auto">
         <ScrollReveal>
           <Card className="max-w-4xl mx-auto bg-gradient-to-r from-primary/5 to-accent/5 border-primary/20 relative overflow-hidden">
@@ -306,7 +317,7 @@ export default function LandingPage() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Button size="lg" className="text-lg px-8 py-6">
+                  <Button size="lg" className="text-lg px-8 py-6" onClick={() => openModal("register")}>
                     Start Free Trial
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
@@ -322,7 +333,6 @@ export default function LandingPage() {
         </ScrollReveal>
       </section>
 
-      {/* Footer */}
       <footer className="border-t bg-muted/30">
         <div className="container px-4 py-12 mx-auto">
           <ScrollReveal>
@@ -342,96 +352,16 @@ export default function LandingPage() {
           </ScrollReveal>
         </div>
       </footer>
+
+      <AuthModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        action={authAction}
+      />
     </div>
   )
 }
 
-function AuthButtons() {
-  const [showUserOptions, setShowUserOptions] = useState(false)
-  const [showClientOptions, setShowClientOptions] = useState(false)
-
-  return (
-    <div className="flex items-center space-x-2">
-      <div className="relative">
-        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-          <Button
-            variant="ghost"
-            onClick={() => {
-              setShowUserOptions(!showUserOptions)
-              setShowClientOptions(false)
-            }}
-          >
-            Login
-          </Button>
-        </motion.div>
-        {showUserOptions && (
-          <motion.div
-            initial={{ opacity: 0, y: -10, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -10, scale: 0.95 }}
-            className="absolute top-full mt-2 right-0 bg-card border rounded-lg shadow-lg p-2 min-w-[120px] z-50"
-          >
-            <Link href="/login">
-              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                <Button variant="ghost" size="sm" className="w-full justify-start">
-                  <Users className="h-4 w-4 mr-2" />
-                  As User
-                </Button>
-              </motion.div>
-            </Link>
-            <Link href="/login">
-              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                <Button variant="ghost" size="sm" className="w-full justify-start">
-                  <Bot className="h-4 w-4 mr-2" />
-                  As Client
-                </Button>
-              </motion.div>
-            </Link>
-          </motion.div>
-        )}
-      </div>
-
-      <div className="relative">
-        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-          <Button
-            onClick={() => {
-              setShowClientOptions(!showClientOptions)
-              setShowUserOptions(false)
-            }}
-          >
-            Register
-          </Button>
-        </motion.div>
-        {showClientOptions && (
-          <motion.div
-            initial={{ opacity: 0, y: -10, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -10, scale: 0.95 }}
-            className="absolute top-full mt-2 right-0 bg-card border rounded-lg shadow-lg p-2 min-w-[120px] z-50"
-          >
-            <Link href="/signup">
-              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                <Button variant="ghost" size="sm" className="w-full justify-start">
-                  <Users className="h-4 w-4 mr-2" />
-                  As User
-                </Button>
-              </motion.div>
-            </Link>
-            <Link href="/signup">
-              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                <Button variant="ghost" size="sm" className="w-full justify-start">
-                  <Bot className="h-4 w-4 mr-2" />
-                  As Client
-                </Button>
-              </motion.div>
-            </Link>
-          </motion.div>
-        )}
-      </div>
-    </div>
-    
-  )
-}
 
 const features = [
   {
